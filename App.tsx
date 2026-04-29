@@ -13,15 +13,19 @@ type UserRole = 'guest' | 'partner' | 'admin';
 type ViewState = 'login' | 'partner_login' | 'intake' | 'dashboard' | 'admin_dashboard' | 'admin_view_partner' | 'presentation';
 type DataMode = 'live' | 'demo';
 
-// Official Logo Component - ROBUST TEXT VERSION
-// Renders "INGRAM MICRO" using font styling to ensure it always displays without broken images.
+// Official Logo Component — uses inline SVG for reliability (no external image dependency)
 const IngramLogo = ({ className = "", variant = "color" }: { className?: string, variant?: "color" | "white" }) => {
+    const fillColor = variant === 'white' ? '#FFFFFF' : '#004481';
     return (
-        <img 
-            src="/Ingram_micro_logo.png" 
-            alt="Ingram Micro" 
-            className={`h-8 md:h-10 w-auto select-none ${variant === 'white' ? 'brightness-0 invert' : ''} ${className}`}
-        />
+        <svg className={`h-8 md:h-10 w-auto select-none ${className}`} viewBox="0 0 280 40" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="32" fontFamily="system-ui, -apple-system, 'Segoe UI', sans-serif" fontSize="36" fontWeight="900" fill={fillColor} letterSpacing="-1.5">
+                INGRAM
+            </text>
+            <text x="155" y="32" fontFamily="system-ui, -apple-system, 'Segoe UI', sans-serif" fontSize="36" fontWeight="300" fill={fillColor} letterSpacing="-1.5">
+                MICRO
+            </text>
+            <circle cx="270" cy="8" r="5" fill="#0078D4"/>
+        </svg>
     );
 };
 
