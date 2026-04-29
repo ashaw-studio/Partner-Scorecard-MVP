@@ -1,5 +1,5 @@
 
-# Ingram Micro Xvantage: AWS Partner Transformation Platform
+# Ingram Micro - MVP: AWS Partner Transformation Platform
 
 ## 1. Executive Summary & Business Project Description
 
