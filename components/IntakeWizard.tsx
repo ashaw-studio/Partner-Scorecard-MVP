@@ -27,6 +27,88 @@ const STEPS = [
     { label: "Finalize", icon: CheckCircle }
 ];
 
+// --- Extracted UI Components (outside main component to prevent re-creation on each render) ---
+const SectionHeader = ({ title, sub }: { title: string, sub?: string }) => (
+    <div className="mb-8 border-b border-slate-100 pb-4">
+        <h3 className="text-2xl font-bold text-[#004481]">{title}</h3>
+        {sub && <p className="text-slate-500 mt-1 text-sm">{sub}</p>}
+    </div>
+);
+
+const Label = ({ children, required }: { children?: React.ReactNode, required?: boolean }) => (
+    <label className="block text-sm font-semibold text-slate-700 mb-2">
+        {children} {required && <span className="text-[#FF9900]">*</span>}
+    </label>
+);
+
+const TextInput = ({ val, onChange, placeholder }: { val: string, onChange: (s: string) => void, placeholder?: string }) => (
+    <input 
+        type="text" 
+        className="w-full p-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#004481] focus:border-transparent outline-none transition-all shadow-sm"
+        value={val}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+    />
+);
+
+const SelectInput = ({ val, onChange, options }: { val: string, onChange: (s: string) => void, options: string[] }) => (
+    <div className="relative">
+         <select 
+            className="w-full p-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#004481] focus:border-transparent outline-none transition-all shadow-sm appearance-none"
+            value={val}
+            onChange={(e) => onChange(e.target.value)}
+        >
+            <option value="">Select option...</option>
+            {options.map(o => <option key={o} value={o}>{o}</option>)}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+             <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+        </div>
+    </div>
+);
+
+const RadioGroup = ({ label, value, options, onChange }: { label: string, value: any, options: string[], onChange: (v: string) => void }) => (
+    <div className="mb-6">
+        <Label>{label}</Label>
+        <div className="flex flex-wrap gap-3 mt-2">
+            {options.map(opt => (
+                <button
+                    key={opt}
+                    onClick={() => onChange(opt)}
+                    className={`px-5 py-2.5 rounded-lg text-sm border font-medium transition-all ${
+                        value === opt 
+                        ? 'bg-blue-50 border-[#004481] text-[#004481] shadow-sm' 
+                        : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400'
+                    }`}
+                >
+                    {opt}
+                </button>
+            ))}
+        </div>
+    </div>
+);
+
+const MultiSelectField = ({ selected, options, onToggle }: { selected: string[], options: string[], onToggle: (item: string) => void }) => (
+    <div className="flex flex-wrap gap-2">
+        {options.map(opt => {
+            const isSelected = selected.includes(opt);
+            return (
+                <button
+                    key={opt}
+                    onClick={() => onToggle(opt)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                        isSelected 
+                        ? 'bg-[#004481] text-white border-[#004481] shadow-md transform scale-105' 
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50'
+                    }`}
+                >
+                    {opt}
+                </button>
+            );
+        })}
+    </div>
+);
+
 const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 0, onCancel }) => {
     const [step, setStep] = useState(0);
     const [formData, setFormData] = useState<PartnerData>(INITIAL_PARTNER_DATA);
@@ -124,87 +206,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
         onComplete(finalData);
     };
 
-    // --- UI Components ---
-    const SectionHeader = ({ title, sub }: { title: string, sub?: string }) => (
-        <div className="mb-8 border-b border-slate-100 pb-4">
-            <h3 className="text-2xl font-bold text-[#004481]">{title}</h3>
-            {sub && <p className="text-slate-500 mt-1 text-sm">{sub}</p>}
-        </div>
-    );
-
-    const Label = ({ children, required }: { children?: React.ReactNode, required?: boolean }) => (
-        <label className="block text-sm font-semibold text-slate-700 mb-2">
-            {children} {required && <span className="text-[#FF9900]">*</span>}
-        </label>
-    );
-
-    const TextInput = ({ val, onChange, placeholder }: { val: string, onChange: (s: string) => void, placeholder?: string }) => (
-        <input 
-            type="text" 
-            className="w-full p-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#004481] focus:border-transparent outline-none transition-all shadow-sm"
-            value={val}
-            placeholder={placeholder}
-            onChange={(e) => onChange(e.target.value)}
-        />
-    );
-
-    const Select = ({ val, onChange, options }: { val: string, onChange: (s: string) => void, options: string[] }) => (
-        <div className="relative">
-             <select 
-                className="w-full p-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#004481] focus:border-transparent outline-none transition-all shadow-sm appearance-none"
-                value={val}
-                onChange={(e) => onChange(e.target.value)}
-            >
-                <option value="">Select option...</option>
-                {options.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-            </div>
-        </div>
-    );
-
-    const MultiSelect = ({ field, options }: { field: keyof PartnerData, options: string[] }) => (
-        <div className="flex flex-wrap gap-2">
-            {options.map(opt => {
-                const isSelected = (formData[field] as string[]).includes(opt);
-                return (
-                    <button
-                        key={opt}
-                        onClick={() => toggleArrayItem(field, opt)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
-                            isSelected 
-                            ? 'bg-[#004481] text-white border-[#004481] shadow-md transform scale-105' 
-                            : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50'
-                        }`}
-                    >
-                        {opt}
-                    </button>
-                );
-            })}
-        </div>
-    );
-
-    const RadioGroup = ({ label, value, options, onChange }: { label: string, value: any, options: string[], onChange: (v: string) => void }) => (
-        <div className="mb-6">
-            <Label>{label}</Label>
-            <div className="flex flex-wrap gap-3 mt-2">
-                {options.map(opt => (
-                    <button
-                        key={opt}
-                        onClick={() => onChange(opt)}
-                        className={`px-5 py-2.5 rounded-lg text-sm border font-medium transition-all ${
-                            value === opt 
-                            ? 'bg-blue-50 border-[#004481] text-[#004481] shadow-sm' 
-                            : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400'
-                        }`}
-                    >
-                        {opt}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
+    // --- UI Components are defined outside the component above ---
 
     const renderStepContent = () => {
         switch(step) {
@@ -245,7 +247,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div><Label required>Role / Title</Label><TextInput val={formData.roleTitle} onChange={(v) => updateField('roleTitle', v)} /></div>
-                                <div><Label>Role Category</Label><Select val={formData.roleCategory} onChange={(v) => updateField('roleCategory', v)} options={["Alliance", "Sales Leader", "Cloud Practice Lead", "Owner/Executive", "Solutions Architect", "Marketing", "Other"]} /></div>
+                                <div><Label>Role Category</Label><SelectInput val={formData.roleCategory} onChange={(v) => updateField('roleCategory', v)} options={["Alliance", "Sales Leader", "Cloud Practice Lead", "Owner/Executive", "Solutions Architect", "Marketing", "Other"]} /></div>
                             </div>
                             <div><Label required>Company Entity Name</Label><TextInput val={formData.companyName} onChange={(v) => updateField('companyName', v)} /></div>
                             <div><Label>Website URL</Label><TextInput val={formData.website} onChange={(v) => updateField('website', v)} placeholder="https://" /></div>
@@ -258,9 +260,9 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                     <div className="space-y-6 animate-in fade-in">
                         <SectionHeader title="Business Focus" sub="Where and how you operate." />
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-8">
-                            <div><Label>Canadian HQ & Operations</Label><MultiSelect field="hqProvince" options={PROVINCES} /></div>
-                            <div><Label>Business Model (Multi-select)</Label><MultiSelect field="businessModel" options={BUSINESS_MODELS} /></div>
-                            <div><Label>Primary Industry Verticals</Label><MultiSelect field="industryVerticals" options={INDUSTRY_VERTICALS} /></div>
+                            <div><Label>HQ & Operations</Label><MultiSelectField selected={formData.hqProvince as string[]} options={PROVINCES} onToggle={(item) => toggleArrayItem('hqProvince', item)} /></div>
+                            <div><Label>Business Model (Multi-select)</Label><MultiSelectField selected={formData.businessModel as string[]} options={BUSINESS_MODELS} onToggle={(item) => toggleArrayItem('businessModel', item)} /></div>
+                            <div><Label>Primary Industry Verticals</Label><MultiSelectField selected={formData.industryVerticals as string[]} options={INDUSTRY_VERTICALS} onToggle={(item) => toggleArrayItem('industryVerticals', item)} /></div>
                         </div>
                         
                         <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
@@ -272,7 +274,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                             {formData.publicSectorActive && (
                                 <div className="animate-in fade-in">
                                     <Label>Segments Served</Label>
-                                    <MultiSelect field="publicSectorSegments" options={PUBLIC_SECTOR_SEGMENTS} />
+                                    <MultiSelectField selected={formData.publicSectorSegments as string[]} options={PUBLIC_SECTOR_SEGMENTS} onToggle={(item) => toggleArrayItem('publicSectorSegments', item)} />
                                     <div className="mt-4">
                                         <Label>Contracts / Vehicle Details</Label>
                                         <textarea 
@@ -293,8 +295,8 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                     <div className="space-y-6 animate-in fade-in">
                         <SectionHeader title="AWS Alignment" sub="Programs and revenue standing." />
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
-                             <div><Label>AWS Competencies</Label><MultiSelect field="competencies" options={COMPETENCY_LIST} /></div>
-                             <div className="pt-4 border-t border-slate-100"><Label>Service Delivery Programs (SDP)</Label><div className="h-40 overflow-y-auto border border-slate-200 rounded-lg p-3 bg-slate-50 mt-2"><MultiSelect field="sdpStatus" options={SDP_LIST} /></div></div>
+                             <div><Label>AWS Competencies</Label><MultiSelectField selected={formData.competencies as string[]} options={COMPETENCY_LIST} onToggle={(item) => toggleArrayItem('competencies', item)} /></div>
+                             <div className="pt-4 border-t border-slate-100"><Label>Service Delivery Programs (SDP)</Label><div className="h-40 overflow-y-auto border border-slate-200 rounded-lg p-3 bg-slate-50 mt-2"><MultiSelectField selected={formData.sdpStatus as string[]} options={SDP_LIST} onToggle={(item) => toggleArrayItem('sdpStatus', item)} /></div></div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -322,10 +324,10 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                          <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
                             <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2"><Trophy size={18} className="text-[#FF9900]" /> Certification Count</h4>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                <div><Label>Cloud Practitioner</Label><Select val={formData.certCount.practitioner} onChange={(v) => updateNested('certCount', 'practitioner', v)} options={["0","1-2","3-4","5+"]} /></div>
-                                <div><Label>Assoc. Architect</Label><Select val={formData.certCount.associate_sa} onChange={(v) => updateNested('certCount', 'associate_sa', v)} options={["0","1-2","3-4","5+"]} /></div>
-                                <div><Label>Pro Architect</Label><Select val={formData.certCount.pro_sa} onChange={(v) => updateNested('certCount', 'pro_sa', v)} options={["0","1-2","3-4","5+"]} /></div>
-                                <div><Label>Security Spec.</Label><Select val={formData.certCount.specialty_security} onChange={(v) => updateNested('certCount', 'specialty_security', v)} options={["0","1-2","3-4","5+"]} /></div>
+                                <div><Label>Cloud Practitioner</Label><SelectInput val={formData.certCount.practitioner} onChange={(v) => updateNested('certCount', 'practitioner', v)} options={["0","1-2","3-4","5+"]} /></div>
+                                <div><Label>Assoc. Architect</Label><SelectInput val={formData.certCount.associate_sa} onChange={(v) => updateNested('certCount', 'associate_sa', v)} options={["0","1-2","3-4","5+"]} /></div>
+                                <div><Label>Pro Architect</Label><SelectInput val={formData.certCount.pro_sa} onChange={(v) => updateNested('certCount', 'pro_sa', v)} options={["0","1-2","3-4","5+"]} /></div>
+                                <div><Label>Security Spec.</Label><SelectInput val={formData.certCount.specialty_security} onChange={(v) => updateNested('certCount', 'specialty_security', v)} options={["0","1-2","3-4","5+"]} /></div>
                             </div>
                          </div>
                     </div>
@@ -344,7 +346,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                             <Label>MAP Phases Delivered In-House</Label>
                             <div className="mt-3">
-                                <MultiSelect field="mapPhasesDelivered" options={["Assess", "Mobilize", "Migrate & Modernize"]} />
+                                <MultiSelectField selected={formData.mapPhasesDelivered as string[]} options={["Assess", "Mobilize", "Migrate & Modernize"]} onToggle={(item) => toggleArrayItem('mapPhasesDelivered', item)} />
                             </div>
                         </div>
                     </div>
@@ -399,7 +401,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                                 <Label>ACE Win Rate (%)</Label><TextInput val={formData.aceWinRate} onChange={(v) => updateField('aceWinRate', v)} placeholder="e.g. 25" />
                             </div>
                             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                                <Label>ACE ARR Value (Avg)</Label><Select val={formData.aceArrValue} onChange={(v) => updateField('aceArrValue', v)} options={["<$50k", "$50k–$250k", "$250k–$1M", ">$1M"]} />
+                                <Label>ACE ARR Value (Avg)</Label><SelectInput val={formData.aceArrValue} onChange={(v) => updateField('aceArrValue', v)} options={["<$50k", "$50k–$250k", "$250k–$1M", ">$1M"]} />
                             </div>
                         </div>
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -433,7 +435,7 @@ const IntakeWizard: React.FC<Props> = ({ onComplete, initialData, startAtStep = 
                         <SectionHeader title="Final Details" sub="Review contacts and GTM needs." />
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                              <Label>GTM Activities of Interest</Label>
-                             <div className="mt-3"><MultiSelect field="gtmActivities" options={["Case Study", "Webinar", "Workshop", "Marketplace Listing", "Event Sponsorship", "Campaign/ABM"]} /></div>
+                             <div className="mt-3"><MultiSelectField selected={formData.gtmActivities as string[]} options={["Case Study", "Webinar", "Workshop", "Marketplace Listing", "Event Sponsorship", "Campaign/ABM"]} onToggle={(item) => toggleArrayItem('gtmActivities', item)} /></div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">

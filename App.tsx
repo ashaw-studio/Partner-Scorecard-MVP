@@ -16,12 +16,12 @@ type DataMode = 'live' | 'demo';
 // Official Logo Component - ROBUST TEXT VERSION
 // Renders "INGRAM MICRO" using font styling to ensure it always displays without broken images.
 const IngramLogo = ({ className = "", variant = "color" }: { className?: string, variant?: "color" | "white" }) => {
-    const textColor = variant === 'white' ? 'text-white' : 'text-[#004481]';
     return (
-        <div className={`flex items-baseline gap-1 leading-none select-none ${className}`}>
-            <span className={`font-black tracking-tighter ${textColor} text-2xl md:text-3xl`}>INGRAM</span>
-            <span className={`font-light tracking-tighter ${textColor} text-2xl md:text-3xl`}>MICRO</span>
-        </div>
+        <img 
+            src="/Ingram_micro_logo.png" 
+            alt="Ingram Micro" 
+            className={`h-8 md:h-10 w-auto select-none ${variant === 'white' ? 'brightness-0 invert' : ''} ${className}`}
+        />
     );
 };
 

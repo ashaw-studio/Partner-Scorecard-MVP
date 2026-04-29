@@ -148,7 +148,7 @@ const PartnerLogin: React.FC<Props> = ({ onLogin, onRegister }) => {
                     </form>
 
                     <div className="mt-8 text-center">
-                        <p className="text-sm text-slate-500 mb-4">New to Ingram Micro Xvantage?</p>
+                        <p className="text-sm text-slate-500 mb-4">New to the Ingram Micro Ecosystem?</p>
                         <button 
                             onClick={onRegister}
                             className="w-full py-3 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl hover:border-[#004481] hover:text-[#004481] transition-all"

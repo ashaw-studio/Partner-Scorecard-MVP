@@ -644,7 +644,7 @@ export default function Presentation({ onClose }: { onClose: () => void }) {
                                         </div>
                                     </div>
                                     <div className="flex gap-4">
-                                        <div className="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 text-slate-300 text-sm">Xvantage</div>
+                                        <div className="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 text-slate-300 text-sm">Partner Portal</div>
                                         <div className="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 text-slate-300 text-sm">AWS ACE</div>
                                         <div className="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 text-slate-300 text-sm">Partner CSVs</div>
                                     </div>
@@ -755,9 +755,9 @@ export default function Presentation({ onClose }: { onClose: () => void }) {
                                             </div>
                                         </div>
                                         <div className="p-8 bg-white/80 backdrop-blur-md rounded-3xl border border-slate-200 shadow-xl group-hover:border-purple-400 group-hover:shadow-purple-500/5 transition-all duration-300">
-                                            <div className="text-purple-600 font-bold text-xs uppercase tracking-widest mb-2">Q4 2024</div>
-                                            <h4 className="font-black text-slate-900 text-xl mb-2">Xvantage Integration</h4>
-                                            <p className="text-slate-500 font-medium leading-relaxed">Deep integration with Xvantage data fabric for global visibility and automated co-selling.</p>
+                                            <div className="text-purple-600 font-bold text-xs uppercase tracking-widest mb-2">Q3 2025</div>
+                                            <h4 className="font-black text-slate-900 text-xl mb-2">Enterprise Integration</h4>
+                                            <p className="text-slate-500 font-medium leading-relaxed">Deep integration with enterprise data fabric for global visibility and automated co-selling.</p>
                                         </div>
                                     </div>
 
