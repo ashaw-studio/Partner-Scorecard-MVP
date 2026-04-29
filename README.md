@@ -1,122 +1,173 @@
+# Ingram Micro — AWS Partner Transformation Platform (MVP)
 
-# Ingram Micro - MVP: AWS Partner Transformation Platform
+> An AI-powered ecosystem portal that digitizes partner assessment, funding optimization, and intelligent lead matching for the Canadian AWS Partner Network.
 
-## 1. Executive Summary & Business Project Description
-
-The **Ingram Micro AWS Partner Transformation Platform** is a mission-critical web application designed to accelerate the growth of the Canadian AWS Partner Ecosystem. It addresses two primary challenges: **Ecosystem Transparency** and **Intelligent Lead Distribution**.
-
-Traditionally, identifying which partners are ready for complex AWS workloads (e.g., Generative AI, Large Scale Migrations) is a manual, spreadsheet-heavy process. Furthermore, distributing leads from marketing events to the "best-fit" partner is often subjective and slow.
-
-This platform digitizes this experience via two interfaces:
-1.  **For Partners (The "Scorecard"):** An intake and analytics dashboard that assesses their technical maturity against AWS standards (Track A, B, C). It offers real-time AI consulting to help them unlock AWS funding and grow their practice.
-2.  **For Ingram Admins (The "Command Center"):** A centralized portfolio view that allows for the bulk ingestion of marketing leads (CSV) and uses Generative AI to semantic match those leads to partners based on geography, competency, and past performance.
+![React](https://img.shields.io/badge/React-19-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-6-purple?logo=vite)
+![AI](https://img.shields.io/badge/AI-Google%20Gemini-orange?logo=google)
 
 ---
 
-## 2. User Stories
+## Overview
 
-### Persona: Sarah - AWS Business Development Manager (Admin)
-*   **US-1 (Bulk Distribution):** "As Sarah, I want to upload a CSV file containing 50+ raw leads from a 'Cloud Summit' event so that I can automatically route them to partners without manually reading every description."
-    *   *Acceptance Criteria:* System accepts CSV, parses specific headers, displays a preview, and AI assigns a "Match Score" and "Reasoning" for each lead.
-*   **US-2 (Pipeline Governance):** "As Sarah, I want to see a master list of all opportunities (assigned and unassigned) so that I can identify which deals are stalling."
-    *   *Acceptance Criteria:* A "Pipeline" view shows a table of all deals with "Last Updated" timestamps. Unassigned leads are highlighted in Orange.
-*   **US-3 (Partner Portfolio):** "As Sarah, I want to search for a partner by name or filter by 'Strategic' status to quickly check their capabilities during a QBR."
-    *   *Acceptance Criteria:* Search bar filters the partner list instantly. Clicking a partner opens their detailed Scorecard view.
+The **Partner Transformation Platform** replaces spreadsheet-based partner management with an intelligence-driven portal. It serves two audiences:
 
-### Persona: Alex - CTO of "CloudNative Inc." (Partner)
-*   **US-4 (Maturity Assessment):** "As Alex, I want to complete a technical intake form so that Ingram Micro understands my team's certifications and capabilities."
-    *   *Acceptance Criteria:* A multi-step wizard collects data on Certs, Headcount, and Competencies. A score (0-100) is generated at the end.
-*   **US-5 (Funding Calculator):** "As Alex, I want to estimate how much AWS funding (MAP/OLA) I can get for a $250k migration project."
-    *   *Acceptance Criteria:* A calculator tab allows inputting ARR/Service fees and outputs potential funding amounts based on my competency status.
-*   **US-6 (Lead Management):** "As Alex, I want to view leads assigned to me by Ingram and update their stage to 'Closed Won' so that I can prove my ROI."
-    *   *Acceptance Criteria:* A "My Opportunities" tab lists assigned deals. I can edit the Stage, and the change is reflected in the Admin dashboard.
+- **AWS Partners** — Get scored on technical maturity, simulate AWS funding eligibility, and receive AI-driven practice consulting tailored to their exact capabilities.
+- **Ingram Micro Admins** — View the entire partner ecosystem, bulk-import leads from CSV, and use Generative AI to match opportunities to the best-fit partner based on competency, geography, and track record.
 
----
+### Key Capabilities
 
-## 3. Technical Specifications
-
-### Architecture
-*   **Frontend:** React 18 (Functional Components, Hooks).
-*   **Build Tool:** Vite / ESM (via Browser-native imports).
-*   **Styling:** Tailwind CSS v3.
-*   **Database:** `localStorage` (Simulated NoSQL via `dbService.ts`).
-*   **AI Engine:** Google Gemini (`gemini-3-flash-preview`) via `@google/genai` SDK.
-
-### Key Components
-*   `AdminDashboard.tsx`: Handles CSV parsing, lead queue management, and the "1-Click Match" workflow.
-*   `Dashboard.tsx`: The Partner view. Contains the Logic for Propensity Scoring and the Funding Calculator.
-*   `IntakeWizard.tsx`: Complex multi-step form for gathering partner data.
-*   `geminiService.ts`: Abstraction layer for AI calls. handles JSON sanitization and prompt engineering.
-
-### Data Model (Key Entities)
-*   **PartnerData:** Stores profile, certifications, competencies, and `calculatedTrack` (A/B/C).
-*   **Opportunity:** Represents a deal. Contains `stage`, `estArr`, `history` log, and `description`.
-*   **Unassigned Queue:** A separate list of Opportunities that have not yet been linked to a specific Partner email.
-
-### Functional Requirements
-*   **CSV Support:** Must support standard CSV format with columns for Customer, Email, Description, and optionally a Pre-assigned Partner.
-*   **AI Reliability:** The Matcher must return valid JSON. If the AI fails or hallucinates markdown, the system must sanitize and retry or fallback gracefully.
-*   **Data Persistence:** Refreshing the page should not lose the Partner Database (persisted in LocalStorage).
-
-### Non-Functional Requirements
-*   **Performance:** Dashboard interactions (filtering/searching) must be < 100ms.
-*   **Security:** API Keys must be loaded via Environment Variables. Data isolation between Partner views (simulated).
-*   **Responsiveness:** UI must scale from Laptop (1366px) to Large Desktop (2560px).
+| Feature | Description |
+|---|---|
+| **Partner Scorecard** | 360° maturity assessment across Capability, Capacity, AI Readiness, and Growth |
+| **Funding Calculator** | Instant MAP/OLA/POC funding estimates based on partner tier and project type |
+| **AI Practice Consultant** | Context-aware chatbot that knows the partner's exact scorecard and gaps |
+| **Bulk Lead Ingestion** | CSV import with automatic parsing and partner pre-assignment detection |
+| **AI Opportunity Matcher** | Generative AI ranks top 3 partner matches per lead with confidence scores |
+| **Pipeline Governance** | End-to-end deal tracking from assignment through close |
 
 ---
 
-## 4. Comprehensive Demo Workflow (The "Happy Path")
+## Quick Start
 
-Follow this script to demonstrate the full capabilities of the platform.
+### Prerequisites
 
-### Phase 1: The Admin Experience (Lead Distribution)
-1.  **Login:**
-    *   Select **"Admin Command"** (Right side).
-2.  **Portfolio View:**
-    *   Show the "Total Active Partners" metric.
-    *   Use the Search bar to find **"Adastra"**. Click "Scorecard" to show you can view their details. Click "Back" to return.
-3.  **Bulk Import:**
-    *   Click the **"Bulk Import"** tab in the header.
-    *   Click **"Load Live Sample"** (Red Button).
-    *   *Explain:* "This simulates a CSV export from an event like AWS re:Invent."
-    *   Click **"Next: Analyze Leads"**.
-    *   *Observation:* Notice the system identifies some leads have a "Partner Assigned" column (Green) and others are "Unassigned" (Orange).
-    *   Click **"Process Import"**.
-    *   *Result:* Toast notification confirms distribution.
-4.  **The Matching Engine:**
-    *   Click the **"Matcher"** tab.
-    *   *Explain:* "These are the leads that didn't have a pre-existing relationship. We need to find them a home."
-    *   Click **"Analyze & Match All"**.
-    *   *Observation:* Watch the progress bar. The AI is reading the Description of each deal and comparing it against the competency profiles of all 7 partners.
-    *   *Result:* Matches appear. "Migration lead" -> "Adastra" (High score due to Migration Competency).
-    *   Click **"Approve All Matches"**.
-5.  **Pipeline Governance:**
-    *   Click **"Pipeline"** tab.
-    *   Show the "All Opportunities" table. Note the "Unassigned" matches are now gone, and everything is assigned to a Partner.
+- [Node.js](https://nodejs.org/) v18+ (or [Bun](https://bun.sh/))
+- A [Google Gemini API Key](https://aistudio.google.com/apikey) (for AI features)
 
-### Phase 2: The Partner Experience (Deal Acceptance)
-1.  **Switch Roles:**
-    *   Click the **Log Out** icon (Top right).
-    *   Select **"Partner Portal"** (Left side).
-2.  **Partner Login:**
-    *   Click **"Show Demo Users"**.
-    *   Select **"Adastra Corporation"**. Click **"Sign In"**.
-3.  **The Scorecard:**
-    *   Show the "Resell Propensity" score (likely high for Adastra).
-    *   Show the "Practice Radar" chart.
-4.  **Managing the Lead:**
-    *   Click **"My Opportunities"** tab.
-    *   Find one of the leads just assigned by the Admin.
-    *   Click **"Update Status"**.
-    *   Change Stage to **"Closed Won"**. Add a note: "Signed contract today."
-    *   Click **"Save Update"**.
-    *   *Result:* The card turns Green.
-5.  **Funding:**
-    *   Click **"Funding Calculator"**.
-    *   Select **"Migration"** workload. Enter **$500,000** ARR.
-    *   *Result:* See the estimated "MAP Mobilize" and "Migrate" credits available because Adastra has the Migration Competency.
+### Setup
 
-### Phase 3: Closing the Loop
-1.  **Log Out** and log back in as **Admin**.
-2.  Go to **"Pipeline"**.
-3.  *Observation:* The deal Adastra just closed is now showing as **"Closed Won"** (Green) in the master view. This demonstrates the end-to-end data flow.
+```bash
+# 1. Clone the repository
+git clone https://github.com/ashaw-studio/Partner-Scorecard-MVP.git
+cd Partner-Scorecard-MVP
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure environment
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
+
+# 4. Start the development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> **Note:** The AI Consultant and Opportunity Matcher require a valid Gemini API key. Without it, the app falls back to mock responses gracefully.
+
+---
+
+## Demo Walkthrough
+
+The app ships with **7 pre-seeded Canadian AWS partners** and sample lead data for a complete demo experience.
+
+### Phase 1 — The Partner Experience
+
+1. Select **"Partner Portal"** from the login screen
+2. Click **"Show Demo Users"** → select **Adastra Corporation**
+3. Explore the **Executive Scorecard** (scores, radar chart, certifications)
+4. Try the **Funding Calculator** — select Migration, enter $500K ARR
+5. Ask the **AI Consultant**: *"How can I increase my AI readiness score?"*
+
+### Phase 2 — The Admin Experience
+
+1. Log out → select **"Ingram Micro Admin"**
+2. Browse the **Portfolio** — filter by Track, search by name
+3. Go to **Bulk Import** → click **"Load Live Sample"** → process the CSV
+4. Switch to **Matcher** → watch AI analyze and rank partner matches
+5. **Approve matches** → verify in the **Pipeline** view
+
+### Phase 3 — Closing the Loop
+
+1. Log back in as the partner who received a lead
+2. Update the opportunity stage to **"Closed Won"**
+3. Switch to Admin → confirm the deal shows as won in the Pipeline
+
+---
+
+## Architecture
+
+```
+├── App.tsx                    # Root component, routing & state management
+├── components/
+│   ├── AdminDashboard.tsx     # Admin: portfolio, CSV import, AI matcher, pipeline
+│   ├── Dashboard.tsx          # Partner: scorecard, funding calc, opportunities
+│   ├── IntakeWizard.tsx       # Multi-step partner assessment form
+│   ├── ChatBot.tsx            # AI Practice Consultant (Gemini-powered)
+│   ├── PartnerLogin.tsx       # Partner authentication
+│   ├── Presentation.tsx       # Executive presentation mode
+│   ├── DemoCopilot.tsx        # Guided demo overlay
+│   ├── DemoNavigation.tsx     # Presentation sidebar navigation
+│   └── AIUnderTheHood.tsx     # AI logic inspector panel
+├── services/
+│   ├── dbService.ts           # LocalStorage-based data persistence
+│   ├── geminiService.ts       # Google Gemini AI integration
+│   ├── seedData.ts            # 7 pre-configured pilot partners
+│   └── sampleLeads.ts        # Demo & live CSV lead datasets
+├── types.ts                   # TypeScript interfaces & constants
+├── server.ts                  # Express + Vite dev server
+└── vite.config.ts             # Build configuration
+```
+
+### Tech Stack
+
+- **Frontend:** React 19, TypeScript, Tailwind CSS
+- **Build:** Vite 6
+- **Charts:** Recharts
+- **AI:** Google Gemini (`gemini-3-flash-preview`) via `@google/genai`
+- **Data:** LocalStorage (simulated NoSQL — production would use Postgres/DynamoDB)
+- **Server:** Express 5 (dev middleware)
+
+---
+
+## Scoring Engine
+
+Partners are evaluated across three vectors (0–100 each):
+
+| Score | Inputs | Weight Factors |
+|---|---|---|
+| **Capability** | AWS Competencies, SDPs, Public Sector status | Competencies ×5, SDPs ×3, PubSec +10 |
+| **Capacity** | Technical team size, certifications | Team size bands mapped to score tiers |
+| **AI Readiness** | 19-dimension maturity matrix (0–5 scale) | Average across all dimensions, normalized to 100 |
+
+Partners are classified into **Tracks**:
+- **Track A (Foundational)** — Starting point, limited delivery experience
+- **Track B (Growth)** — 1+ competency or SDP with validated references
+- **Track C (Strategic)** — 2+ competencies, 5+ engineers, SDP active
+
+---
+
+## AI Integration
+
+### Partner-Facing: Practice Consultant
+The chatbot receives the partner's full scorecard as system context, enabling responses like:
+> *"Your capacity score is 80 but capability is only 30. Focus on acquiring the AWS Migration Competency — here's a 90-day path."*
+
+### Admin-Facing: Opportunity Matcher
+For each unassigned lead, the AI evaluates all partners using weighted criteria:
+- **40%** Capability alignment (competencies vs. workload)
+- **20%** Track maturity (complex deals → Track B/C only)
+- **15%** Geographic proximity
+- **10%** Industry vertical overlap
+
+Returns top 3 matches with confidence scores and reasoning.
+
+---
+
+## Roadmap to Production
+
+| Area | Current (MVP) | Target |
+|---|---|---|
+| **Data** | LocalStorage | PostgreSQL with JSONB columns |
+| **Auth** | Simulated | AWS Cognito / SSO |
+| **AI Backend** | Client-side API calls | Serverless edge functions (API key server-side) |
+| **Hosting** | Local dev server | Vercel / AWS Amplify |
+
+---
+
+## License
+
+Internal use only — Ingram Micro confidential.

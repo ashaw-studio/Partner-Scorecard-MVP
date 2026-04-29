@@ -259,7 +259,7 @@ export default function App() {
                                 <span className={`w-2 h-2 rounded-full ${dataMode === 'live' ? 'bg-red-500' : 'bg-green-500'}`}></span>
                                 {dataMode === 'live' ? 'Mode: Live Data' : 'Mode: Demo Data'}
                             </div>
-                            <span>© 2024 Ingram Micro</span>
+                            <span>© 2025 Ingram Micro</span>
                         </div>
                     </div>
                 </div>
