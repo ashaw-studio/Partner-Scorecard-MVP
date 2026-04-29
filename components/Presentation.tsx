@@ -443,12 +443,8 @@ export default function Presentation({ onClose }: { onClose: () => void }) {
     useEffect(() => {
         const step = DEMO_SCRIPT[currentStepIndex];
         
-        // Reset AI Panel
-        if (step.id === 'ai-analysis' || step.id === 'bulk-ingest' || step.id === 'matcher') {
-            setShowAIUnderTheHood(true);
-        } else {
-            setShowAIUnderTheHood(false);
-        }
+        // Reset AI Panel — disabled for clean executive demo
+        setShowAIUnderTheHood(false);
 
         if (step.view) setView(step.view as ViewType);
         if (step.section) setActiveSection(step.section as DemoSection);
