@@ -2,7 +2,7 @@
 
 > An AI-powered ecosystem portal that digitizes partner assessment, funding optimization, and intelligent lead matching — starting with the AWS partner network in Canada as the pilot market.
 
-**🔗 Live Demo: [partner-scorecard-mvp.vercel.app](https://partner-scorecard-mvp.vercel.app)**
+**🔗 Live Demo: [dist-navy-one-88.vercel.app](https://dist-navy-one-88.vercel.app)**
 
 ![React](https://img.shields.io/badge/React-19-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
