@@ -2,8 +2,12 @@
 import { GoogleGenAI } from "@google/genai";
 import { PartnerData, OpportunityMatchRequest, MatchResult } from "../types";
 
-// Fixed: Initializing directly with process.env.GEMINI_API_KEY as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Lazy initialization — only creates the client when an API key is available
+const getAI = () => {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) return null;
+    return new GoogleGenAI({ apiKey: key });
+};
 
 export const generateConsultantResponse = async (
     history: { role: 'user' | 'model'; parts: { text: string }[] }[],
@@ -37,6 +41,9 @@ export const generateConsultantResponse = async (
     `;
 
     try {
+        const ai = getAI();
+        if (!ai) return "API Key is missing. Please configure the environment.";
+        
         const model = "gemini-3-flash-preview"; 
         const chat = ai.chats.create({
             model: model,
@@ -118,6 +125,9 @@ export const matchOpportunity = async (
      `;
 
      try {
+         const ai = getAI();
+         if (!ai) throw new Error("No API key");
+         
          const response = await ai.models.generateContent({
              model: "gemini-3-flash-preview",
              contents: prompt,
