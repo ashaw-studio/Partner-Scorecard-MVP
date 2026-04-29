@@ -15,6 +15,7 @@ const PartnerLogin: React.FC<Props> = ({ onLogin, onRegister }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isDemoMode, setIsDemoMode] = useState(false);
+    const [loginError, setLoginError] = useState('');
 
     useEffect(() => {
         const all = dbService.getAllPartners();
@@ -43,8 +44,7 @@ const PartnerLogin: React.FC<Props> = ({ onLogin, onRegister }) => {
             if (partner) {
                 onLogin(partner);
             } else {
-                // Shake effect or error here in real app, for now just allow register or fail
-                alert("Account not found. Please register or use the Demo User dropdown.");
+                setLoginError("Account not found. Please use the Demo User dropdown above to sign in.");
             }
         }
     };
@@ -132,6 +132,12 @@ const PartnerLogin: React.FC<Props> = ({ onLogin, onRegister }) => {
                                 />
                             </div>
                         </div>
+
+                        {loginError && (
+                            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 font-medium">
+                                {loginError}
+                            </div>
+                        )}
 
                         <button 
                             type="submit"

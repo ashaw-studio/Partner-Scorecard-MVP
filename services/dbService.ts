@@ -38,7 +38,7 @@ export const dbService = {
         if (!raw) return [];
         try {
             const data = JSON.parse(raw);
-            // Filter out specific test user to hide permanently
+            // Filter out internal test accounts
             return data.filter((p: PartnerData) => p.email !== 'Testuser@testing.com');
         } catch (e) {
             return [];
