@@ -127,8 +127,8 @@ const DEMO_PARTNER: PartnerData = {
             status: 'Active',
             probability: 75,
             source: 'Lead Form',
-            dateCreated: '2024-02-15',
-            dateLastUpdated: '2024-03-01',
+            dateCreated: '2025-02-15',
+            dateLastUpdated: '2025-03-01',
             history: []
         },
         {
@@ -141,8 +141,8 @@ const DEMO_PARTNER: PartnerData = {
             status: 'Active',
             probability: 60,
             source: 'Manual',
-            dateCreated: '2024-02-20',
-            dateLastUpdated: '2024-03-05',
+            dateCreated: '2025-02-20',
+            dateLastUpdated: '2025-03-05',
             history: []
         }
     ]

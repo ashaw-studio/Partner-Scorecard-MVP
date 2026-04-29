@@ -35,3 +35,6 @@ migrated_prompt_history/
 metadata.json
 generate_arch_image.ts
 generate_images.ts
+
+# Package manager locks (use npm install to regenerate)
+bun.lock

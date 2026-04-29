@@ -532,7 +532,7 @@ const Dashboard = React.forwardRef<DashboardHandle, Props>(({ data, onReset, onE
                                         <>
                                             <span className="font-black text-[#004481]">Adastra</span> is a Tier-1 Strategic Partner with deep expertise in <span className="font-bold">Data & AI</span>. 
                                             Currently leading the market in <span className="font-bold">Financial Services</span> cloud modernization. 
-                                            Key focus for 2024 is scaling <span className="font-bold">Generative AI</span> offerings via Amazon Bedrock.
+                                            Key focus is scaling <span className="font-bold">Generative AI</span> offerings via Amazon Bedrock.
                                         </>
                                     ) : (
                                         `Strategic assessment for ${data.companyName} based on current AWS alignment and technical capacity.`
